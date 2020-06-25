@@ -45,15 +45,16 @@ services:
 
     # XMPP server
     prosody:
-        image: jitsi/prosody:latest
+        image: quantumobject/docker-openfire
         restart: ${RESTART_POLICY}
+        ports:
+        - 9090:9090
+        - 5222:5222
         expose:
             - '5222'
             - '5347'
             - '5280'
-        volumes:
-            - ${CONFIG}/prosody/config:/config:Z
-            - ${CONFIG}/prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
+            - '9090'
         environment:
             - AUTH_TYPE
             - ENABLE_AUTH
