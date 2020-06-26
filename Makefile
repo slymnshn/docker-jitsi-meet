@@ -1,8 +1,8 @@
 FORCE_REBUILD ?= 0
-JITSI_RELEASE ?= stable
+JITSI_RELEASE ?= unstable
 JITSI_BUILD ?= latest
-JITSI_REPO ?= jitsi
-JITSI_SERVICES ?= base base-java web prosody jicofo jvb jigasi etherpad jibri
+JITSI_REPO ?= orema
+JITSI_SERVICES ?= base base-java web openfire jicofo jvb # jigasi etherpad jibri
 
 BUILD_ARGS := --build-arg JITSI_REPO=$(JITSI_REPO)
 ifeq ($(FORCE_REBUILD), 1)

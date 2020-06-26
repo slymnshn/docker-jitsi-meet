@@ -18,7 +18,7 @@ services:
 
   # Frontend
   web:
-    image: jitsi/web:latest
+    image: orema/web:latest
     restart: ${RESTART_POLICY}
     ports:
       - '${HTTP_PORT}:80'
@@ -60,10 +60,10 @@ services:
 
   # XMPP server
   openfire:
-    image: quantumobject/docker-openfire
+    image: orema/openfire
     restart: ${RESTART_POLICY}
     volumes:
-    - ${CONFIG}/openfire:/usr/share/openfire/conf
+      - ${CONFIG}/openfire:/var/lib/openfire:Z
     ports:
       - 9090:9090
       - 5222:5222
@@ -132,7 +132,7 @@ services:
 
   # Focus component
   jicofo:
-    image: jitsi/jicofo:latest
+    image: orema/jicofo:latest
     restart: ${RESTART_POLICY}
     volumes:
       - ${CONFIG}/jicofo:/config:Z
@@ -160,7 +160,7 @@ services:
 
   # Video bridge
   jvb:
-    image: jitsi/jvb:latest
+    image: orema/jvb:latest
     restart: ${RESTART_POLICY}
     ports:
       - '${JVB_PORT}:${JVB_PORT}/udp'

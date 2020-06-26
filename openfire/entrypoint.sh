@@ -12,8 +12,7 @@ initialize_data_dir() {
   echo "Initializing ${OPENFIRE_DATA_DIR}..."
 
   mkdir -p ${OPENFIRE_DATA_DIR}
-  chmod -R 0750 ${OPENFIRE_DATA_DIR}
-  chown -R ${OPENFIRE_USER}:${OPENFIRE_USER} ${OPENFIRE_DATA_DIR}
+  chmod -R 777 ${OPENFIRE_DATA_DIR}
 
   # migrates data volume directory structure
   if [[ -d ${OPENFIRE_DATA_DIR}/openfire ]]; then
@@ -30,17 +29,17 @@ initialize_data_dir() {
 
   # initialize the data volume
   if [[ ! -d ${OPENFIRE_DATA_DIR}/conf ]]; then
-    sudo -HEu ${OPENFIRE_USER} cp -a /etc/openfire ${OPENFIRE_DATA_DIR}/conf
+    cp -a /etc/openfire ${OPENFIRE_DATA_DIR}/conf
   fi
-  sudo -HEu ${OPENFIRE_USER} mkdir -p ${OPENFIRE_DATA_DIR}/{plugins,embedded-db}
-  sudo -HEu ${OPENFIRE_USER} rm -rf ${OPENFIRE_DATA_DIR}/plugins/admin
-  sudo -HEu ${OPENFIRE_USER} ln -sf /usr/share/openfire/plugin-admin /var/lib/openfire/plugins/admin
+  mkdir -p ${OPENFIRE_DATA_DIR}/{plugins,embedded-db}
+  rm -rf ${OPENFIRE_DATA_DIR}/plugins/admin
+  ln -sf /usr/share/openfire/plugin-admin /var/lib/openfire/plugins/admin
 
   # create version file
   CURRENT_VERSION=
   [[ -f ${OPENFIRE_DATA_DIR}/VERSION ]] && CURRENT_VERSION=$(cat ${OPENFIRE_DATA_DIR}/VERSION)
   if [[ ${OPENFIRE_VERSION} != ${CURRENT_VERSION} ]]; then
-    echo -n "${OPENFIRE_VERSION}" | sudo -HEu ${OPENFIRE_USER} tee ${OPENFIRE_DATA_DIR}/VERSION >/dev/null
+    echo -n "${OPENFIRE_VERSION}" | tee ${OPENFIRE_DATA_DIR}/VERSION >/dev/null
   fi
 }
 
@@ -48,7 +47,6 @@ initialize_log_dir() {
   echo "Initializing ${OPENFIRE_LOG_DIR}..."
   mkdir -p ${OPENFIRE_LOG_DIR}
   chmod -R 0755 ${OPENFIRE_LOG_DIR}
-  chown -R ${OPENFIRE_USER}:${OPENFIRE_USER} ${OPENFIRE_LOG_DIR}
 }
 
 # allow arguments to be passed to openfire launch
@@ -63,7 +61,7 @@ initialize_log_dir
 
 # default behaviour is to launch openfire
 if [[ -z ${1} ]]; then
-  exec start-stop-daemon --start --chuid ${OPENFIRE_USER}:${OPENFIRE_USER} --exec /usr/bin/java -- \
+  exec start-stop-daemon --start --exec /usr/bin/java -- \
     -server \
     -DopenfireHome=/usr/share/openfire \
     -Dopenfire.lib.dir=/usr/share/openfire/lib \
