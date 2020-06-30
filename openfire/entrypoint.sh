@@ -49,6 +49,17 @@ initialize_log_dir() {
   chmod -R 0755 ${OPENFIRE_LOG_DIR}
 }
 
+configure_hosts() {
+  {
+    echo "127.0.0.1   ${XMPP_DOMAIN}"
+    echo "127.0.0.1   ${XMPP_AUTH_DOMAIN}"
+    echo "127.0.0.1   ${XMPP_MUC_DOMAIN}"
+    echo "127.0.0.1   ${XMPP_INTERNAL_MUC_DOMAIN}"
+    echo "127.0.0.1   ${XMPP_GUEST_DOMAIN}"
+    echo "127.0.0.1   ${XMPP_RECORDER_DOMAIN}"
+  } >> /etc/hosts
+}
+
 # allow arguments to be passed to openfire launch
 if [[ ${1:0:1} = '-' ]]; then
   EXTRA_ARGS="$@"
@@ -58,6 +69,7 @@ fi
 rewire_openfire
 initialize_data_dir
 initialize_log_dir
+configure_hosts
 
 # default behaviour is to launch openfire
 if [[ -z ${1} ]]; then
